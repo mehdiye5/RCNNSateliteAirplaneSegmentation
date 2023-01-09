@@ -35,3 +35,8 @@ Using this model structure, the training was done using Binary Cross Entropy Los
 
 ![segment1](./images/segment1.JPG)
 ![segment2](./images/segment2.JPG)
+
+
+## Instance Segmentation
+
+Once both the detection and the segmentation modules were implemented, I utilized both components to implement the instance segmentation results for the dataset.
