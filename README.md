@@ -17,7 +17,7 @@ the performance. To improve performance, I did the following:
 2. I also changed my object detection method/model from ““faster_rcnn_R_101_FPN_3x.yml” to “faster_rcnn_X_101_32x8d_FPN_3x.yaml”
 3. I also did a data augmentation by implementing a custom mapper and a custom trainer for the model. Custom mapper is using transforms that randomly changes contrast, brightness, saturation, rotation and lighting of the image.
 
-These changes have allowed me to gain a significant performance improvement over my original model. Final average precision for the range of IoU of IoU 0.5 : 0.95 became 89. 
+These changes have allowed me to gain a significant performance improvement over my original model. Final average precision for the range of IoU of IoU 0.5 : 0.95 became 89. We can have a look how model performed by evaluating the tensorboard charts below.
 
 ![detect4](./images/detect4.JPG)
 
@@ -43,7 +43,7 @@ Using this model structure, the training was done using Binary Cross Entropy Los
 
 ## Instance Segmentation
 
-Once both the detection and the segmentation modules were implemented, I utilized both components to implement the instance segmentation results for the dataset. Custom instance segmentation component will utilize the detection model that we previously trained and semantic segmentation model that we trained after that that. Instance segmentation model is responsible for uniqely segmenting each plane on the image. Since both segmentation and detection components were highly optimized its no surprise that instance segmentation component also had a high accuracy. 
+Once both the detection and the segmentation modules were implemented, I utilized both components to implement the instance segmentation results for the dataset. Custom instance segmentation component will utilize the detection model that we previously trained and semantic segmentation model that we trained after that that. Instance segmentation model is responsible for uniqely segmenting each plane on the image. Since both segmentation and detection components were highly optimized its no surprise that instance segmentation component also had a high accuracy. The model performance can be evaluated from the tensorboard chart below
 
 ![isegment2](./images/isegment2.JPG)
 
@@ -53,3 +53,26 @@ The visualization of the model is illustrated below.
 
 
 ## Mask R-CNN
+
+To make sure that our custom model is the best model for the task, I also implemented a Mask R-CNN. Once it has been trained we will compare the performance with the custom model that we trained earlier.
+
+![mask1](./images/mask1.JPG)
+![mask2](./images/mask2.JPG)
+
+
+Both Instance Segmentation Model and Mask R-CNN are the extension of the Faster R-CNN. They both use Faster R-CNN to determine the bounding boxes of the objects, but where they differ is the segmentation method used and the customizability of each approach.
+The drawback of the custom model is that I had to implement semantic segmentation model and detection model
+separately which takes a lot of time. To optimize the custom model, I had to spend a lot of time
+optimizing detection portion and then spending even more time optimizing semantic segmentation
+portion. The benefit of the custom model is that we have a greater control of each component of the
+model. For instance depending on our use cases we can swap out segmentation component or detection
+component with different architecture to achieve better or faster results.
+Then advantage of mask r-cnn is that that it is much more convenient than the method we used for the custom model. It takes very fast to implement it since most of its components have bee pre-defined. To optimize it you can simply play around with configurations or with transformations by implementing a custom trainer. The
+drawback of mask r-cnn is that it is not as customizable as the custom model. We can’t easily swap out
+individual components of the model with our own implementation if them. Both Fast r-cnn model in the detection component and mask r-cnn are pretrained models. However, Just by examining the detection portion of the models, we can see that our fast r-cnn in the custom model has greater AP50 value of 94.46
+where mask r-cnn has AP50 of 89.53 for the IoU range of 0.5 - 0.95. This means that our detection
+component of the custom model is able to detect objects better than the detection component of mask r-cnn. This is because the configuration for the detection model focused on only training and optimizing model for
+detection purposes which is why it yields better results for that particular task where mask r-cnn model
+is focused on optimizing the performance of segmentation and detection as one unit, which is why
+detection component yields lower average precision AP50 score. As for when we compare the segmentation component of mask r-cnn and instance segmentations component of the custom model. Just examining visualization portion of both models we can see that they perform very similar. All the airplanes were segmented with similar precision. This is not surprising because we spentsignificant amount of time tuning semantic segmentation component of the custom model and the configuration that we used
+for mask r-cnn was intended to optimize the detection task for fast r-cnn. 
