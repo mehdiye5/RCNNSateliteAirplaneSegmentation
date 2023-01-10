@@ -17,7 +17,11 @@ the performance. To improve performance, I did the following:
 2. I also changed my object detection method/model from ““faster_rcnn_R_101_FPN_3x.yml” to “faster_rcnn_X_101_32x8d_FPN_3x.yaml”
 3. I also did a data augmentation by implementing a custom mapper and a custom trainer for the model. Custom mapper is using transforms that randomly changes contrast, brightness, saturation, rotation and lighting of the image.
 
-These changes have allowed me to gain a significant performance improvement over my original model. Final average precision for the range of IoU of IoU 0.5 : 0.95 became 89. As we can see from the images below, results speak for themselves. 
+These changes have allowed me to gain a significant performance improvement over my original model. Final average precision for the range of IoU of IoU 0.5 : 0.95 became 89. 
+
+![detect4](./images/detect4.JPG)
+
+As we can see from the visualization images below, results speak for themselves. 
 
 ![detect1](./images/detect1.JPG)
 ![detect2](./images/detect2.JPG)
@@ -39,4 +43,13 @@ Using this model structure, the training was done using Binary Cross Entropy Los
 
 ## Instance Segmentation
 
-Once both the detection and the segmentation modules were implemented, I utilized both components to implement the instance segmentation results for the dataset.
+Once both the detection and the segmentation modules were implemented, I utilized both components to implement the instance segmentation results for the dataset. Custom instance segmentation component will utilize the detection model that we previously trained and semantic segmentation model that we trained after that that. Instance segmentation model is responsible for uniqely segmenting each plane on the image. Since both segmentation and detection components were highly optimized its no surprise that instance segmentation component also had a high accuracy. 
+
+![isegment2](./images/isegment2.JPG)
+
+The visualization of the model is illustrated below.
+
+![isegment1](./images/isegment1.JPG)
+
+
+## Mask R-CNN
